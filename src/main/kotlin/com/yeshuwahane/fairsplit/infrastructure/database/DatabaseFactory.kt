@@ -15,21 +15,23 @@ class DatabaseFactory(private val config: DatabaseConfig) : Closeable {
         private set
 
     fun init(): DatabaseFactory {
-        val isPostgres = config.url.isNotBlank() && config.url.startsWith("jdbc:postgresql:")
-        val effectiveUrl = if (config.url.isNotBlank()) {
-            config.url
-        } else {
-            logger.info("No DATABASE_URL configured. Falling back to local embedded H2 database (PostgreSQL compatibility mode).")
-            "jdbc:h2:./data/fairsplit_dev;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE"
-        }
-        val driver = if (isPostgres) "org.postgresql.Driver" else "org.h2.Driver"
+        val isPostgres = config.isPostgreSql
+        val effectiveUrl = config.effectiveJdbcUrl
+        val driver = config.driverClassName
+        val effectiveUser = config.effectiveUser
+        val effectivePassword = config.effectivePassword
 
-        logger.info("Connecting to database at {}", effectiveUrl.substringBefore("?"))
+        if (isPostgres) {
+            logger.info("Initializing production PostgreSQL database at {}", config.sanitizedUrl)
+        } else {
+            logger.info("No PostgreSQL DATABASE_URL configured. Falling back to local embedded H2 database (PostgreSQL compatibility mode).")
+            logger.info("Connecting to embedded database at {}", config.sanitizedUrl)
+        }
 
         val hikariConfig = HikariConfig().apply {
             jdbcUrl = effectiveUrl
-            if (config.user.isNotBlank()) username = config.user
-            if (config.password.isNotBlank()) password = config.password
+            if (effectiveUser.isNotBlank()) username = effectiveUser
+            if (effectivePassword.isNotBlank()) password = effectivePassword
             maximumPoolSize = config.maxPoolSize
             minimumIdle = config.minIdle
             connectionTimeout = config.connectionTimeoutMs
@@ -68,7 +70,7 @@ class DatabaseFactory(private val config: DatabaseConfig) : Closeable {
             }
         }
 
-        logger.info("Database and Exposed connection pool initialized successfully.")
+        logger.info("Database and Exposed connection pool initialized successfully using {}.", driver)
         return this
     }
 
