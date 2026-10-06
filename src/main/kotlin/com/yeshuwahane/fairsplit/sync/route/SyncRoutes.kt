@@ -13,6 +13,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.UUID
 
@@ -418,7 +419,8 @@ fun Application.configureSyncRoutes(
                                 totalApplicationRows = counts.values.filter { it > 0 }.sum()
                             )
                         }
-                        call.respond(HttpStatusCode.OK, ApiResponse.success(status))
+                        val jsonStr = Json.encodeToString(ApiResponse.serializer(DatabaseStatusDto.serializer()), ApiResponse.success(status))
+                        call.respondText(jsonStr, io.ktor.http.ContentType.Application.Json, HttpStatusCode.OK)
                     } catch (e: Exception) {
                         call.respond(HttpStatusCode.InternalServerError, ApiResponse.error("STATUS_FAILED", e.message ?: "Failed to get database status"))
                     }
@@ -529,7 +531,8 @@ fun Application.configureSyncRoutes(
                                 message = "Database reset completed successfully. All application tables contain 0 rows."
                             )
                         }
-                        call.respond(HttpStatusCode.OK, ApiResponse.success(result))
+                        val jsonStr = Json.encodeToString(ApiResponse.serializer(DatabaseResetResultDto.serializer()), ApiResponse.success(result))
+                        call.respondText(jsonStr, io.ktor.http.ContentType.Application.Json, HttpStatusCode.OK)
                     } catch (e: Exception) {
                         call.respond(HttpStatusCode.InternalServerError, ApiResponse.error("RESET_FAILED", e.message ?: "Failed to reset database"))
                     }
