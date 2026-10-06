@@ -44,6 +44,29 @@ data class SyncCategoryBreakdownDto(
 )
 
 @Serializable
+data class DatabaseStatusDto(
+    val databaseProduct: String,
+    val databaseVersion: String,
+    val databaseUrlSanitized: String,
+    val tableCounts: Map<String, Long>,
+    val flywayMigrationCount: Long,
+    val uploadedFilesCount: Int,
+    val totalApplicationRows: Long
+)
+
+@Serializable
+data class DatabaseResetResultDto(
+    val databaseProduct: String,
+    val databaseUrlSanitized: String,
+    val countsBefore: Map<String, Long>,
+    val countsAfter: Map<String, Long>,
+    val flywayMigrationCount: Long,
+    val deletedUploadedFiles: Int,
+    val allTablesEmpty: Boolean,
+    val message: String
+)
+
+@Serializable
 data class SyncSettlementDto(
     val id: String,
     val fromMember: SyncMemberDto,
@@ -385,14 +408,14 @@ fun Application.configureSyncRoutes(
                                 if (d.exists() && d.isDirectory) d.listFiles()?.count { it.isFile } ?: 0 else 0
                             } catch (_: Exception) { 0 }
 
-                            mapOf(
-                                "databaseProduct" to dbProduct,
-                                "databaseVersion" to dbVersion,
-                                "databaseUrlSanitized" to com.yeshuwahane.fairsplit.config.DatabaseConfig.sanitizeDatabaseUrl(dbUrl),
-                                "tableCounts" to counts,
-                                "flywayMigrationCount" to flywayHistory,
-                                "uploadedFilesCount" to uploadFilesCount,
-                                "totalApplicationRows" to counts.values.filter { it > 0 }.sum()
+                            DatabaseStatusDto(
+                                databaseProduct = dbProduct,
+                                databaseVersion = dbVersion,
+                                databaseUrlSanitized = com.yeshuwahane.fairsplit.config.DatabaseConfig.sanitizeDatabaseUrl(dbUrl),
+                                tableCounts = counts,
+                                flywayMigrationCount = flywayHistory,
+                                uploadedFilesCount = uploadFilesCount,
+                                totalApplicationRows = counts.values.filter { it > 0 }.sum()
                             )
                         }
                         call.respond(HttpStatusCode.OK, ApiResponse.success(status))
@@ -495,15 +518,15 @@ fun Application.configureSyncRoutes(
                                 flywayHistory = -1L
                             }
 
-                            mapOf(
-                                "databaseProduct" to dbProduct,
-                                "databaseUrlSanitized" to com.yeshuwahane.fairsplit.config.DatabaseConfig.sanitizeDatabaseUrl(dbUrl),
-                                "countsBefore" to beforeCounts,
-                                "countsAfter" to afterCounts,
-                                "flywayMigrationCount" to flywayHistory,
-                                "deletedUploadedFiles" to deletedFiles,
-                                "allTablesEmpty" to afterCounts.values.all { it == 0L },
-                                "message" to "Database reset completed successfully. All application tables contain 0 rows."
+                            DatabaseResetResultDto(
+                                databaseProduct = dbProduct,
+                                databaseUrlSanitized = com.yeshuwahane.fairsplit.config.DatabaseConfig.sanitizeDatabaseUrl(dbUrl),
+                                countsBefore = beforeCounts,
+                                countsAfter = afterCounts,
+                                flywayMigrationCount = flywayHistory,
+                                deletedUploadedFiles = deletedFiles,
+                                allTablesEmpty = afterCounts.values.all { it == 0L },
+                                message = "Database reset completed successfully. All application tables contain 0 rows."
                             )
                         }
                         call.respond(HttpStatusCode.OK, ApiResponse.success(result))
