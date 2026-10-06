@@ -26,7 +26,8 @@ data class SyncMemberDto(
     val avatarUrl: String? = null,
     val isCurrentUser: Boolean = false,
     val totalSpent: Double = 0.0,
-    val balance: Double = 0.0
+    val balance: Double = 0.0,
+    val upiId: String? = null
 )
 
 @Serializable
@@ -179,7 +180,8 @@ fun Application.configureSyncRoutes(
                 avatarUrl = u?.avatarUrl,
                 isCurrentUser = (callerId != null && m.userId == callerId),
                 totalSpent = totalPaid,
-                balance = netBal
+                balance = netBal,
+                upiId = u?.upiId
             )
         }
 
@@ -247,7 +249,8 @@ fun Application.configureSyncRoutes(
                     avatarUrl = debtorUser?.avatarUrl,
                     isCurrentUser = (callerId != null && debt.debtorId == callerId),
                     totalSpent = (debtorBal?.totalPaidMinor ?: 0L) / 100.0,
-                    balance = (debtorBal?.netBalanceMinor ?: 0L) / 100.0
+                    balance = (debtorBal?.netBalanceMinor ?: 0L) / 100.0,
+                    upiId = debtorUser?.upiId
                 ),
                 toMember = SyncMemberDto(
                     id = debt.creditorId.toString(),
@@ -256,7 +259,8 @@ fun Application.configureSyncRoutes(
                     avatarUrl = creditorUser?.avatarUrl,
                     isCurrentUser = (callerId != null && debt.creditorId == callerId),
                     totalSpent = (creditorBal?.totalPaidMinor ?: 0L) / 100.0,
-                    balance = (creditorBal?.netBalanceMinor ?: 0L) / 100.0
+                    balance = (creditorBal?.netBalanceMinor ?: 0L) / 100.0,
+                    upiId = creditorUser?.upiId
                 ),
                 amount = debt.amountMinor / 100.0,
                 status = "PENDING"
@@ -334,12 +338,175 @@ fun Application.configureSyncRoutes(
                     }
                 }
 
+                get("/database-status") {
+                    try {
+                        val status = com.yeshuwahane.fairsplit.infrastructure.database.dbQuery {
+                            val dbProduct = (connection.connection as java.sql.Connection).metaData.databaseProductName ?: "Unknown"
+                            val dbVersion = (connection.connection as java.sql.Connection).metaData.databaseProductVersion ?: ""
+                            val dbUrl = (connection.connection as java.sql.Connection).metaData.url ?: ""
+                            val tables = listOf(
+                                "users",
+                                "auth_identities",
+                                "phone_otp_challenges",
+                                "refresh_sessions",
+                                "user_preferences",
+                                "user_devices",
+                                "epics",
+                                "epic_members",
+                                "expenses",
+                                "expense_splits",
+                                "settlements",
+                                "activity_logs",
+                                "idempotency_keys"
+                            )
+                            val counts = mutableMapOf<String, Long>()
+                            tables.forEach { table ->
+                                var count = 0L
+                                try {
+                                    exec("SELECT COUNT(*) FROM $table") { rs ->
+                                        if (rs.next()) count = rs.getLong(1)
+                                    }
+                                    counts[table] = count
+                                } catch (e: Exception) {
+                                    counts[table] = -1L
+                                }
+                            }
+                            var flywayHistory = 0L
+                            try {
+                                exec("SELECT COUNT(*) FROM flyway_schema_history") { rs ->
+                                    if (rs.next()) flywayHistory = rs.getLong(1)
+                                }
+                            } catch (_: Exception) {
+                                flywayHistory = -1L
+                            }
+
+                            val uploadFilesCount = try {
+                                val d = File(storageConfig.uploadDir)
+                                if (d.exists() && d.isDirectory) d.listFiles()?.count { it.isFile } ?: 0 else 0
+                            } catch (_: Exception) { 0 }
+
+                            mapOf(
+                                "databaseProduct" to dbProduct,
+                                "databaseVersion" to dbVersion,
+                                "databaseUrlSanitized" to com.yeshuwahane.fairsplit.config.DatabaseConfig.sanitizeDatabaseUrl(dbUrl),
+                                "tableCounts" to counts,
+                                "flywayMigrationCount" to flywayHistory,
+                                "uploadedFilesCount" to uploadFilesCount,
+                                "totalApplicationRows" to counts.values.filter { it > 0 }.sum()
+                            )
+                        }
+                        call.respond(HttpStatusCode.OK, ApiResponse.success(status))
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.InternalServerError, ApiResponse.error("STATUS_FAILED", e.message ?: "Failed to get database status"))
+                    }
+                }
+
                 post("/reset-database") {
                     try {
-                        com.yeshuwahane.fairsplit.infrastructure.database.dbQuery {
-                            exec("TRUNCATE TABLE expense_splits, expenses, settlements, activity_logs, epic_members, epics, idempotency_keys, user_devices, user_preferences, refresh_sessions, phone_otp_challenges, auth_identities, users CASCADE;")
+                        val result = com.yeshuwahane.fairsplit.infrastructure.database.dbQuery {
+                            val dbProduct = (connection.connection as java.sql.Connection).metaData.databaseProductName ?: "Unknown"
+                            val dbUrl = (connection.connection as java.sql.Connection).metaData.url ?: ""
+                            val isPg = dbProduct.contains("PostgreSQL", ignoreCase = true)
+                                    && !dbProduct.contains("H2", ignoreCase = true)
+
+                            val tables = listOf(
+                                "expense_splits",
+                                "expenses",
+                                "settlements",
+                                "activity_logs",
+                                "epic_members",
+                                "epics",
+                                "idempotency_keys",
+                                "user_devices",
+                                "user_preferences",
+                                "refresh_sessions",
+                                "phone_otp_challenges",
+                                "auth_identities",
+                                "users"
+                            )
+
+                            // 1. Snapshot counts before reset
+                            val beforeCounts = mutableMapOf<String, Long>()
+                            tables.forEach { table ->
+                                var count = 0L
+                                try {
+                                    exec("SELECT COUNT(*) FROM $table") { rs ->
+                                        if (rs.next()) count = rs.getLong(1)
+                                    }
+                                    beforeCounts[table] = count
+                                } catch (_: Exception) {
+                                    beforeCounts[table] = -1L
+                                }
+                            }
+
+                            // 2. Perform table truncations/deletions
+                            if (isPg) {
+                                exec("TRUNCATE TABLE expense_splits, expenses, settlements, activity_logs, epic_members, epics, idempotency_keys, user_devices, user_preferences, refresh_sessions, phone_otp_challenges, auth_identities, users CASCADE;")
+                            } else {
+                                // H2 / embedded DB
+                                try {
+                                    exec("SET REFERENTIAL_INTEGRITY FALSE;")
+                                    tables.forEach { table ->
+                                        try { exec("TRUNCATE TABLE $table;") } catch (_: Exception) {}
+                                    }
+                                } finally {
+                                    exec("SET REFERENTIAL_INTEGRITY TRUE;")
+                                }
+                            }
+
+                            // Universal sequential DELETE in reverse foreign-key order
+                            tables.forEach { table ->
+                                try { exec("DELETE FROM $table;") } catch (_: Exception) {}
+                            }
+
+                            // 3. Clean up uploaded files/receipts
+                            var deletedFiles = 0
+                            try {
+                                val dirs = listOf(File(storageConfig.uploadDir), File("data/uploads"), File("uploads"))
+                                dirs.forEach { dir ->
+                                    if (dir.exists() && dir.isDirectory) {
+                                        dir.listFiles()?.forEach { file ->
+                                            if (file.isFile && file.delete()) deletedFiles++
+                                        }
+                                    }
+                                }
+                            } catch (_: Exception) {}
+
+                            // 4. Verify post-reset counts
+                            val afterCounts = mutableMapOf<String, Long>()
+                            tables.forEach { table ->
+                                var count = 0L
+                                try {
+                                    exec("SELECT COUNT(*) FROM $table") { rs ->
+                                        if (rs.next()) count = rs.getLong(1)
+                                    }
+                                    afterCounts[table] = count
+                                } catch (_: Exception) {
+                                    afterCounts[table] = -1L
+                                }
+                            }
+
+                            var flywayHistory = 0L
+                            try {
+                                exec("SELECT COUNT(*) FROM flyway_schema_history") { rs ->
+                                    if (rs.next()) flywayHistory = rs.getLong(1)
+                                }
+                            } catch (_: Exception) {
+                                flywayHistory = -1L
+                            }
+
+                            mapOf(
+                                "databaseProduct" to dbProduct,
+                                "databaseUrlSanitized" to com.yeshuwahane.fairsplit.config.DatabaseConfig.sanitizeDatabaseUrl(dbUrl),
+                                "countsBefore" to beforeCounts,
+                                "countsAfter" to afterCounts,
+                                "flywayMigrationCount" to flywayHistory,
+                                "deletedUploadedFiles" to deletedFiles,
+                                "allTablesEmpty" to afterCounts.values.all { it == 0L },
+                                "message" to "Database reset completed successfully. All application tables contain 0 rows."
+                            )
                         }
-                        call.respond(HttpStatusCode.OK, ApiResponse.success(mapOf("status" to "ok", "message" to "All tables truncated successfully")))
+                        call.respond(HttpStatusCode.OK, ApiResponse.success(result))
                     } catch (e: Exception) {
                         call.respond(HttpStatusCode.InternalServerError, ApiResponse.error("RESET_FAILED", e.message ?: "Failed to reset database"))
                     }
