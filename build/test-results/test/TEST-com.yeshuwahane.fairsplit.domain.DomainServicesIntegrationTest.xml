@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-06T16:36:30.048Z" hostname="Ashutoshs-MacBook-Pro.local" time="0.597">
+  <properties/>
+  <testcase name="testIdempotentExecution" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.161"/>
+  <testcase name="testAtomicRollbackWhenSubOperationFails" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.062"/>
+  <testcase name="testMultiUserSyncAndPersistenceAcrossConnectionLifecycle" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.046"/>
+  <testcase name="testSettlementFlowAndOverpaymentRejection" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.029"/>
+  <testcase name="testPairwiseDebtCheckBlocksMemberRemovalEvenWhenNetBalanceIsZero" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.093"/>
+  <testcase name="testEpicCreationAndMembership" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.018"/>
+  <testcase name="testMemberRemovalRules" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.081"/>
+  <testcase name="testTwoDeviceManualSyncFlow_AliceCreates_BobJoins_ExactSync" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.058"/>
+  <testcase name="testJoinEpicWithSecondUser" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.025"/>
+  <testcase name="testEqualExpenseAndBalanceCalculation" classname="com.yeshuwahane.fairsplit.domain.DomainServicesIntegrationTest" time="0.022"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

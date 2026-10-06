@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.yeshuwahane.fairsplit.auth.TokenServiceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-06T16:36:30Z" hostname="Ashutoshs-MacBook-Pro.local" time="0.025">
+  <properties/>
+  <testcase name="testConcurrentRefreshOnlyOneSucceeds" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.004"/>
+  <testcase name="testRefreshWithRevokedTokenFails" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.002"/>
+  <testcase name="testReuseOfOldRefreshTokenFails" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.004"/>
+  <testcase name="testIssueTokenPair" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.006"/>
+  <testcase name="testLogoutRevokesSession" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.002"/>
+  <testcase name="testRefreshValidToken" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.005"/>
+  <testcase name="testRefreshWithExpiredTokenFails" classname="com.yeshuwahane.fairsplit.auth.TokenServiceTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

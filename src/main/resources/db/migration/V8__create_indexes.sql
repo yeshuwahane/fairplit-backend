@@ -1,0 +1,18 @@
+CREATE INDEX idx_auth_identities_user_id ON auth_identities(user_id);
+CREATE INDEX idx_refresh_sessions_user_id ON refresh_sessions(user_id);
+CREATE INDEX idx_refresh_sessions_token_hash ON refresh_sessions(token_hash);
+CREATE INDEX idx_otp_phone_number ON phone_otp_challenges(phone_number, created_at DESC);
+CREATE INDEX idx_epics_created_by ON epics(created_by);
+CREATE INDEX idx_epic_members_epic_id ON epic_members(epic_id);
+CREATE INDEX idx_epic_members_user_id ON epic_members(user_id);
+CREATE INDEX idx_expenses_epic_id ON expenses(epic_id, created_at DESC);
+CREATE INDEX idx_expenses_paid_by_user_id ON expenses(paid_by_user_id);
+CREATE INDEX idx_expense_splits_expense_id ON expense_splits(expense_id);
+CREATE INDEX idx_expense_splits_user_id ON expense_splits(user_id);
+CREATE INDEX idx_user_devices_user_id ON user_devices(user_id);
+CREATE INDEX idx_settlements_epic_id ON settlements(epic_id, created_at DESC);
+CREATE INDEX idx_settlements_from_user_id ON settlements(from_user_id);
+CREATE INDEX idx_settlements_to_user_id ON settlements(to_user_id);
+CREATE INDEX idx_activity_logs_epic_id ON activity_logs(epic_id, created_at DESC);
+CREATE INDEX idx_activity_logs_actor_id ON activity_logs(actor_id);
+CREATE INDEX idx_idempotency_expires_at ON idempotency_keys(expires_at);

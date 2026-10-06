@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.yeshuwahane.fairsplit.auth.AuthRoutesTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-06T16:36:29.605Z" hostname="Ashutoshs-MacBook-Pro.local" time="0.34">
+  <properties/>
+  <testcase name="testCompleteAuthFlowViaRoutes" classname="com.yeshuwahane.fairsplit.auth.AuthRoutesTest" time="0.322"/>
+  <testcase name="testGoogleAuthConsistentUser" classname="com.yeshuwahane.fairsplit.auth.AuthRoutesTest" time="0.018"/>
+  <system-out><![CDATA[2026-10-06 22:06:29.610 [DefaultDispatcher-worker-5 @call-context#27] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:29.611 [DefaultDispatcher-worker-5 @call-context#27] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-10-06 22:06:29.611 [DefaultDispatcher-worker-1 @coroutine#29] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:29.612 [DefaultDispatcher-worker-1 @coroutine#29] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:29.619 [DefaultDispatcher-worker-5 @request#27] INFO  c.y.f.auth.service.PhoneAuthService - Generated development OTP for +919876543210: 123456
+2026-10-06 22:06:29.930 [DefaultDispatcher-worker-5 @call-context#59] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:29.931 [DefaultDispatcher-worker-5 @call-context#59] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-10-06 22:06:29.931 [DefaultDispatcher-worker-7 @coroutine#61] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:29.931 [DefaultDispatcher-worker-7 @coroutine#61] INFO  io.ktor.test - Responding at https://localhost:443
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-06T16:36:30.789Z" hostname="Ashutoshs-MacBook-Pro.local" time="0.324">
+  <properties/>
+  <testcase name="testInvalidOrMissingJwtIsRejected" classname="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" time="0.081"/>
+  <testcase name="testValidMemberConnectsAndReceivesConnectedMessage" classname="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" time="0.037"/>
+  <testcase name="testRoomIsolationBetweenEpics" classname="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" time="0.029"/>
+  <testcase name="testMultiDeviceBroadcast" classname="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" time="0.135"/>
+  <testcase name="testNonMemberConnectionIsRejected" classname="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" time="0.023"/>
+  <testcase name="testEndToEndExpenseCreationAndBobReceipt" classname="com.yeshuwahane.fairsplit.realtime.RealtimeWebSocketTest" time="0.018"/>
+  <system-out><![CDATA[2026-10-06 22:06:30.818 [DefaultDispatcher-worker-9 @call-context#215] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:30.820 [DefaultDispatcher-worker-9 @call-context#215] INFO  io.ktor.test - Application started in 0.003 seconds.
+2026-10-06 22:06:30.821 [DefaultDispatcher-worker-4 @coroutine#217] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:30.822 [DefaultDispatcher-worker-4 @coroutine#217] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:30.854 [DefaultDispatcher-worker-10 @raw-ws-handler#227] WARN  c.y.fairsplit.realtime.WebSocket - WebSocket connection rejected for epic 154a1edc-9088-4824-ac9f-66ca94459654: missing token
+2026-10-06 22:06:30.866 [DefaultDispatcher-worker-2 @raw-ws-handler#245] WARN  c.y.fairsplit.realtime.WebSocket - WebSocket connection rejected for epic 154a1edc-9088-4824-ac9f-66ca94459654: invalid or expired token
+2026-10-06 22:06:30.884 [DefaultDispatcher-worker-15 @call-context#264] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:30.885 [DefaultDispatcher-worker-15 @call-context#264] INFO  io.ktor.test - Application started in 0.002 seconds.
+2026-10-06 22:06:30.886 [DefaultDispatcher-worker-9 @coroutine#266] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:30.887 [DefaultDispatcher-worker-9 @coroutine#266] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:30.894 [DefaultDispatcher-worker-15 @raw-ws-handler#276] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic 6f73ed0a-f2ee-4159-b86a-c0058ee9f55e: user 19306652-d8cf-4155-938f-9da92648f010 (active sessions in room: 1)
+2026-10-06 22:06:30.898 [DefaultDispatcher-worker-2 @raw-ws-handler#276] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic 6f73ed0a-f2ee-4159-b86a-c0058ee9f55e: user 19306652-d8cf-4155-938f-9da92648f010 (remaining sessions: 0)
+2026-10-06 22:06:30.898 [DefaultDispatcher-worker-2 @raw-ws-handler#276] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - Room for epic 6f73ed0a-f2ee-4159-b86a-c0058ee9f55e is now empty and cleaned up
+2026-10-06 22:06:30.902 [DefaultDispatcher-worker-2 @raw-ws-handler#296] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic 6f73ed0a-f2ee-4159-b86a-c0058ee9f55e: user 19306652-d8cf-4155-938f-9da92648f010 (active sessions in room: 1)
+2026-10-06 22:06:30.906 [DefaultDispatcher-worker-9 @raw-ws-handler#296] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic 6f73ed0a-f2ee-4159-b86a-c0058ee9f55e: user 19306652-d8cf-4155-938f-9da92648f010 (remaining sessions: 0)
+2026-10-06 22:06:30.906 [DefaultDispatcher-worker-9 @raw-ws-handler#296] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - Room for epic 6f73ed0a-f2ee-4159-b86a-c0058ee9f55e is now empty and cleaned up
+2026-10-06 22:06:30.922 [DefaultDispatcher-worker-3 @call-context#321] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:30.923 [DefaultDispatcher-worker-3 @call-context#321] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-10-06 22:06:30.923 [DefaultDispatcher-worker-11 @coroutine#323] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:30.923 [DefaultDispatcher-worker-11 @coroutine#323] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:30.926 [DefaultDispatcher-worker-3 @raw-ws-handler#332] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic 3ea5b9a2-3ba4-4a7d-9961-940e9a632d18: user 507c4011-d18a-427e-9b01-c8d3d704c605 (active sessions in room: 1)
+2026-10-06 22:06:30.930 [DefaultDispatcher-worker-17 @raw-ws-handler#354] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic 996baf3e-4bc9-4652-bc44-0e72ee58e303: user b5ed12d0-9668-4ecd-b9bf-883daa1e16e3 (active sessions in room: 1)
+2026-10-06 22:06:30.934 [DefaultDispatcher-worker-11 @raw-ws-handler#332] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic 3ea5b9a2-3ba4-4a7d-9961-940e9a632d18: user 507c4011-d18a-427e-9b01-c8d3d704c605 (remaining sessions: 0)
+2026-10-06 22:06:30.934 [DefaultDispatcher-worker-3 @raw-ws-handler#354] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic 996baf3e-4bc9-4652-bc44-0e72ee58e303: user b5ed12d0-9668-4ecd-b9bf-883daa1e16e3 (remaining sessions: 0)
+2026-10-06 22:06:30.934 [DefaultDispatcher-worker-3 @raw-ws-handler#354] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - Room for epic 996baf3e-4bc9-4652-bc44-0e72ee58e303 is now empty and cleaned up
+2026-10-06 22:06:30.934 [DefaultDispatcher-worker-11 @raw-ws-handler#332] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - Room for epic 3ea5b9a2-3ba4-4a7d-9961-940e9a632d18 is now empty and cleaned up
+2026-10-06 22:06:30.957 [DefaultDispatcher-worker-22 @call-context#376] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:30.957 [DefaultDispatcher-worker-22 @call-context#376] INFO  io.ktor.test - Application started in 0.0 seconds.
+2026-10-06 22:06:30.958 [DefaultDispatcher-worker-2 @coroutine#378] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:30.958 [DefaultDispatcher-worker-2 @coroutine#378] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:30.960 [DefaultDispatcher-worker-22 @raw-ws-handler#387] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic e38c12a7-6566-4cdf-895f-891e4a1830ed: user e927ad3c-ce1a-4ed3-9ad2-1280f67043f9 (active sessions in room: 1)
+2026-10-06 22:06:30.962 [DefaultDispatcher-worker-17 @raw-ws-handler#408] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic e38c12a7-6566-4cdf-895f-891e4a1830ed: user e927ad3c-ce1a-4ed3-9ad2-1280f67043f9 (active sessions in room: 2)
+2026-10-06 22:06:30.966 [DefaultDispatcher-worker-8 @raw-ws-handler#430] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic e38c12a7-6566-4cdf-895f-891e4a1830ed: user c8ceb8f3-33ef-418a-bc0d-c19bd7b2a6a4 (active sessions in room: 3)
+2026-10-06 22:06:30.970 [DefaultDispatcher-worker-20 @raw-ws-handler#387] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic e38c12a7-6566-4cdf-895f-891e4a1830ed: user e927ad3c-ce1a-4ed3-9ad2-1280f67043f9 (remaining sessions: 2)
+2026-10-06 22:06:30.970 [DefaultDispatcher-worker-20 @raw-ws-handler#408] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic e38c12a7-6566-4cdf-895f-891e4a1830ed: user e927ad3c-ce1a-4ed3-9ad2-1280f67043f9 (remaining sessions: 1)
+2026-10-06 22:06:30.971 [DefaultDispatcher-worker-2 @raw-ws-handler#430] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic e38c12a7-6566-4cdf-895f-891e4a1830ed: user c8ceb8f3-33ef-418a-bc0d-c19bd7b2a6a4 (remaining sessions: 0)
+2026-10-06 22:06:30.971 [DefaultDispatcher-worker-2 @raw-ws-handler#430] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - Room for epic e38c12a7-6566-4cdf-895f-891e4a1830ed is now empty and cleaned up
+2026-10-06 22:06:31.087 [DefaultDispatcher-worker-21 @call-context#450] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:31.087 [DefaultDispatcher-worker-21 @call-context#450] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-10-06 22:06:31.088 [DefaultDispatcher-worker-24 @coroutine#452] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:31.088 [DefaultDispatcher-worker-24 @coroutine#452] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:31.091 [DefaultDispatcher-worker-21 @raw-ws-handler#461] WARN  c.y.fairsplit.realtime.WebSocket - WebSocket connection rejected for epic 1eac9667-c182-467c-98bd-96353e52229c: user eb7404ce-b1e9-4143-8fdb-90d334003120 is not a member
+2026-10-06 22:06:31.107 [DefaultDispatcher-worker-12 @call-context#484] INFO  io.ktor.test - No ktor.deployment.watch patterns specified, automatic reload is not active.
+2026-10-06 22:06:31.107 [DefaultDispatcher-worker-12 @call-context#484] INFO  io.ktor.test - Application started in 0.001 seconds.
+2026-10-06 22:06:31.108 [DefaultDispatcher-worker-22 @coroutine#486] INFO  io.ktor.test - Responding at http://localhost:80
+2026-10-06 22:06:31.108 [DefaultDispatcher-worker-22 @coroutine#486] INFO  io.ktor.test - Responding at https://localhost:443
+2026-10-06 22:06:31.109 [DefaultDispatcher-worker-12 @raw-ws-handler#495] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket connected to epic 1c202b3e-893d-4b64-9af4-bcdff57d58da: user d8624905-53fd-4d9f-bbf6-17387d0da8b3 (active sessions in room: 1)
+2026-10-06 22:06:31.113 [DefaultDispatcher-worker-19 @raw-ws-handler#495] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - WebSocket disconnected from epic 1c202b3e-893d-4b64-9af4-bcdff57d58da: user d8624905-53fd-4d9f-bbf6-17387d0da8b3 (remaining sessions: 0)
+2026-10-06 22:06:31.113 [DefaultDispatcher-worker-19 @raw-ws-handler#495] INFO  c.y.f.r.b.InMemoryEpicRealtimeBroadcaster - Room for epic 1c202b3e-893d-4b64-9af4-bcdff57d58da is now empty and cleaned up
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

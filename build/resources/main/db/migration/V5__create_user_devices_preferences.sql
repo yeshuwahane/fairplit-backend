@@ -1,0 +1,16 @@
+CREATE TABLE user_devices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    fcm_token VARCHAR(512) NOT NULL UNIQUE,
+    platform VARCHAR(10) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE user_preferences (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    default_currency CHAR(3) NOT NULL DEFAULT 'INR',
+    push_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    theme VARCHAR(20) NOT NULL DEFAULT 'SYSTEM',
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

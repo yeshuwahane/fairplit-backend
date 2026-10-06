@@ -1,0 +1,52 @@
+package com.yeshuwahane.fairsplit.common.error
+
+enum class ErrorCode {
+    // Auth & Tokens
+    UNAUTHORIZED,
+    FORBIDDEN,
+    INVALID_OTP,
+    OTP_EXPIRED,
+    OTP_MAX_ATTEMPTS,
+    OTP_RATE_LIMITED,
+    OTP_NOT_FOUND,
+    INVALID_TOKEN,
+    TOKEN_EXPIRED,
+    REFRESH_TOKEN_EXPIRED,
+    REFRESH_TOKEN_REVOKED,
+    AUTH_IDENTITY_CONFLICT,
+
+    // User & Profile
+    USER_NOT_FOUND,
+    USER_ALREADY_EXISTS,
+
+    // Epics & Membership
+    EPIC_NOT_FOUND,
+    NOT_EPIC_MEMBER,
+    EPIC_ADMIN_REQUIRED,
+    EPIC_HAS_UNSETTLED_BALANCES,
+    EPIC_REQUIRES_ADMIN,
+    MEMBER_NOT_FOUND,
+    MEMBER_ALREADY_EXISTS,
+    MEMBER_HAS_UNSETTLED_BALANCE,
+
+    // Expenses & Splits
+    EXPENSE_NOT_FOUND,
+    INVALID_SPLIT,
+    INVALID_AMOUNT,
+    INVALID_CURRENCY,
+
+    // Settlements
+    SETTLEMENT_NOT_FOUND,
+    SETTLEMENT_EXCEEDS_BALANCE,
+
+    // Devices & Preferences
+    DEVICE_NOT_FOUND,
+
+    // Common & Infrastructure
+    VALIDATION_ERROR,
+    IDEMPOTENCY_CONFLICT,
+    NOT_FOUND,
+    CONFLICT,
+    RATE_LIMITED,
+    INTERNAL_ERROR
+}

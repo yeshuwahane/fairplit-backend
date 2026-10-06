@@ -1,0 +1,35 @@
+> Task :checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :compileKotlin UP-TO-DATE
+> Task :compileJava NO-SOURCE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+
+> Task :run
+2026-10-04 23:28:36.418 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2026-10-04 23:28:36.531 [main] INFO  [Koin] - Started 13 definitions in 1.4 ms
+2026-10-04 23:28:36.534 [main] INFO  c.y.f.i.database.DatabaseFactory - No DATABASE_URL configured. Falling back to local embedded H2 database (PostgreSQL compatibility mode).
+2026-10-04 23:28:36.535 [main] INFO  c.y.f.i.database.DatabaseFactory - Connecting to database at jdbc:h2:./data/fairsplit_dev;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+2026-10-04 23:28:36.543 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-10-04 23:28:36.752 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn1: url=jdbc:h2:./data/fairsplit_dev user=
+2026-10-04 23:28:36.754 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-10-04 23:28:36.821 [main] INFO  c.y.f.i.database.DatabaseFactory - Database and Exposed connection pool initialized successfully.
+2026-10-04 23:28:36.825 [main] INFO  c.yeshuwahane.fairsplit.Application - Initializing FairSplit Backend [Environment: dev]
+2026-10-04 23:28:37.390 [main] INFO  Application - Application started in 1.084 seconds.
+2026-10-04 23:28:37.492 [DefaultDispatcher-worker-1] INFO  Application - Responding at http://0.0.0.0:8080
+
+> Task :run FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':run' (registered by plugin class 'org.gradle.api.plugins.ApplicationPlugin').
+> Process 'command '/Users/yeshuwahane/.gradle/jdks/amazon_com_inc_-21-aarch64-os_x.2/amazon-corretto-21.jdk/Contents/Home/bin/java'' finished with non-zero exit value 137 (this value may indicate that the process was terminated with the SIGKILL signal, which is often caused by the system running out of memory)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 2m 3s
+3 actionable tasks: 1 executed, 2 up-to-date
