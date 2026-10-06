@@ -149,7 +149,8 @@ fun Application.configureSyncRoutes(
     activityRepository: ActivityRepository,
     userRepository: UserRepository,
     idempotencyService: IdempotencyService,
-    epicRealtimeBroadcaster: com.yeshuwahane.fairsplit.realtime.broadcaster.EpicRealtimeBroadcaster
+    epicRealtimeBroadcaster: com.yeshuwahane.fairsplit.realtime.broadcaster.EpicRealtimeBroadcaster,
+    storageConfig: com.yeshuwahane.fairsplit.config.StorageConfig = com.yeshuwahane.fairsplit.config.StorageConfig()
 ) {
     // Helper to map an Epic + its members + server-derived balances into a SyncEpicDto
     suspend fun buildSyncEpicDto(epic: Epic, callerId: UUID?): SyncEpicDto {
@@ -285,7 +286,7 @@ fun Application.configureSyncRoutes(
                     post {
                         try {
                             val req = call.receive<SyncImageUploadRequest>()
-                            val uploadsDir = File("./data/uploads").canonicalFile
+                            val uploadsDir = File(storageConfig.uploadDir).canonicalFile
                             uploadsDir.mkdirs()
                             val rawName = File(req.fileName).name // Strips any directory traversal like ../
                             val ext = rawName.substringAfterLast('.', "jpg").lowercase().filter { it.isLetterOrDigit() }
@@ -315,7 +316,7 @@ fun Application.configureSyncRoutes(
                 route("/uploads/{fileName}") {
                     get {
                         val fileName = call.parameters["fileName"] ?: ""
-                        val uploadsDir = File("./data/uploads").canonicalFile
+                        val uploadsDir = File(storageConfig.uploadDir).canonicalFile
                         val file = File(uploadsDir, File(fileName).name).canonicalFile
                         if (file.exists() && file.isFile && file.toPath().startsWith(uploadsDir.toPath())) {
                             val ext = file.extension.lowercase()

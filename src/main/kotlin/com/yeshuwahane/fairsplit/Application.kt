@@ -106,7 +106,8 @@ fun Application.module() {
         activityRepository = activityRepository,
         userRepository = userRepository,
         idempotencyService = idempotencyService,
-        epicRealtimeBroadcaster = epicRealtimeBroadcaster
+        epicRealtimeBroadcaster = epicRealtimeBroadcaster,
+        storageConfig = get()
     )
 }
 
