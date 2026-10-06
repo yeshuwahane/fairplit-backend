@@ -334,6 +334,17 @@ fun Application.configureSyncRoutes(
                     }
                 }
 
+                post("/reset-database") {
+                    try {
+                        com.yeshuwahane.fairsplit.infrastructure.database.dbQuery {
+                            exec("TRUNCATE TABLE expense_splits, expenses, settlements, activity_logs, epic_members, epics, idempotency_keys, user_devices, user_preferences, refresh_sessions, phone_otp_challenges, auth_identities, users CASCADE;")
+                        }
+                        call.respond(HttpStatusCode.OK, ApiResponse.success(mapOf("status" to "ok", "message" to "All tables truncated successfully")))
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.InternalServerError, ApiResponse.error("RESET_FAILED", e.message ?: "Failed to reset database"))
+                    }
+                }
+
                 fun parseOrGenerateUuid(idStr: String?): UUID {
                     if (idStr.isNullOrBlank()) return UUID.randomUUID()
                     return try {
