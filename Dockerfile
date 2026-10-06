@@ -3,7 +3,7 @@
 # ==============================================================================
 
 # Stage 1: Build fat JAR
-FROM eclipse-temurin:21-jdk AS builder
+FROM eclipse-temurin:21-jdk AS build
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ COPY src/ src/
 RUN ./gradlew --no-daemon buildFatJar
 
 # Stage 2: Production JRE runtime
-FROM eclipse-temurin:21-jre AS runner
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
@@ -33,8 +33,8 @@ RUN groupadd -r fairsplit && useradd -r -g fairsplit fairsplit && \
     mkdir -p /app/data /app/uploads && \
     chown -R fairsplit:fairsplit /app
 
-# Copy the standalone fat JAR from builder stage
-COPY --from=builder --chown=fairsplit:fairsplit "/app/build/libs/Fair Split-all.jar" /app/app.jar
+# Copy deterministic standalone fat JAR from build stage
+COPY --from=build --chown=fairsplit:fairsplit /app/build/libs/fairsplit-backend.jar /app/app.jar
 
 USER fairsplit
 
