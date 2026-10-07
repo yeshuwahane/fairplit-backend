@@ -45,28 +45,19 @@ fun Application.configureAuthRoutes(
     routing {
         fun Route.authEndpoints() {
             route("/auth") {
+                // Phone OTP authentication has been deprecated and removed
                 route("/phone") {
                     post("/request-otp") {
-                        val req = call.receive<RequestOtpRequest>()
-                        val otp = phoneAuthService.requestOtp(req.phoneValue)
-                        val devOtp = if (appConfig.environment != "prod") otp else null
                         call.respond(
-                            HttpStatusCode.OK,
-                            ApiResponse.success(
-                                RequestOtpResponse(
-                                    message = "OTP challenge sent successfully",
-                                    devOtp = devOtp
-                                )
-                            )
+                            HttpStatusCode.Gone,
+                            ApiResponse.error("AUTH_DEPRECATED", "Phone OTP authentication has been removed. Please sign in with Google.")
                         )
                     }
 
                     post("/verify-otp") {
-                        val req = call.receive<VerifyOtpRequest>()
-                        val result = phoneAuthService.verifyOtp(req.phoneValue, req.otp)
                         call.respond(
-                            HttpStatusCode.OK,
-                            ApiResponse.success(AuthResponse.fromResult(result))
+                            HttpStatusCode.Gone,
+                            ApiResponse.error("AUTH_DEPRECATED", "Phone OTP authentication has been removed. Please sign in with Google.")
                         )
                     }
                 }

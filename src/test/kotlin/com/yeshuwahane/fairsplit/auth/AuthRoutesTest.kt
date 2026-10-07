@@ -100,53 +100,67 @@ class AuthRoutesTest {
     }
 
     @Test
-    fun testCompleteAuthFlowViaRoutes() = testApplication {
+    fun testPhoneOtpEndpointsAreDeprecated() = testApplication {
         setupAuth()
 
-        // 1. Request OTP
+        // 1. Request OTP returns 410 Gone
         val reqResponse = client.post("/api/v1/auth/phone/request-otp") {
             header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             setBody(json.encodeToString(RequestOtpRequest("+919876543210")))
         }
-        assertEquals(HttpStatusCode.OK, reqResponse.status)
-        val reqBody = json.decodeFromString<ApiResponse<RequestOtpResponse>>(reqResponse.bodyAsText())
-        assertEquals(true, reqBody.success)
-        assertEquals("123456", reqBody.data?.devOtp)
+        assertEquals(HttpStatusCode.Gone, reqResponse.status)
 
-        // 2. Verify OTP
+        // 2. Verify OTP returns 410 Gone
         val verifyResponse = client.post("/api/v1/auth/phone/verify-otp") {
             header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             setBody(json.encodeToString(VerifyOtpRequest("+919876543210", "123456")))
         }
-        assertEquals(HttpStatusCode.OK, verifyResponse.status)
-        val verifyBody = json.decodeFromString<ApiResponse<AuthResponse>>(verifyResponse.bodyAsText())
-        assertEquals(true, verifyBody.success)
-        val tokens = verifyBody.data
+        assertEquals(HttpStatusCode.Gone, verifyResponse.status)
+    }
+
+    @Test
+    fun testGoogleAuthProtectedRoutesAndRefreshFlow() = testApplication {
+        setupAuth()
+
+        // 1. Sign in with Google
+        val googleReq = GoogleAuthRequest(
+            email = "flowuser@gmail.com",
+            displayName = "Flow User",
+            photoUrl = "http://example.com/flow.jpg"
+        )
+        val authRes = client.post("/api/v1/auth/google") {
+            header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            setBody(json.encodeToString(googleReq))
+        }
+        assertEquals(HttpStatusCode.OK, authRes.status)
+        val authBody = json.decodeFromString<ApiResponse<AuthResponse>>(authRes.bodyAsText())
+        assertTrue(authBody.success)
+        val tokens = authBody.data
         assertNotNull(tokens)
         assertNotNull(tokens.accessToken)
         assertNotNull(tokens.refreshToken)
 
-        // 3. Access Protected Route /api/v1/auth/me with Bearer token
+        // 2. Access Protected Route /api/v1/auth/me with Bearer token
         val meResponse = client.get("/api/v1/auth/me") {
             header(HttpHeaders.Authorization, "Bearer ${tokens.accessToken}")
         }
         assertEquals(HttpStatusCode.OK, meResponse.status)
 
-        // 4. Access Protected Route without token -> 401
+        // 3. Access Protected Route without token -> 401
         val unauthorizedResponse = client.get("/api/v1/auth/me")
         assertEquals(HttpStatusCode.Unauthorized, unauthorizedResponse.status)
 
-        // 5. Refresh token
+        // 4. Refresh token
         val refreshResponse = client.post("/api/v1/auth/refresh") {
             header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             setBody(json.encodeToString(RefreshTokenRequest(tokens.refreshToken)))
         }
         assertEquals(HttpStatusCode.OK, refreshResponse.status)
         val refreshBody = json.decodeFromString<ApiResponse<TokenRefreshResponse>>(refreshResponse.bodyAsText())
-        assertEquals(true, refreshBody.success)
+        assertTrue(refreshBody.success)
         assertNotNull(refreshBody.data?.accessToken)
 
-        // 6. Logout
+        // 5. Logout
         val logoutResponse = client.post("/api/v1/auth/logout") {
             header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             setBody(json.encodeToString(LogoutRequest(refreshBody.data?.refreshToken)))
