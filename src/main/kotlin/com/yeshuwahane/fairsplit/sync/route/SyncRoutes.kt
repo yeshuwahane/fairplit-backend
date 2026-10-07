@@ -633,10 +633,16 @@ fun Application.configureSyncRoutes(
 
                         get("/{id}") {
                             val idStr = call.parameters["id"] ?: ""
-                            val epicId = UUID.fromString(idStr)
+                            val epicId = try { UUID.fromString(idStr) } catch (_: Exception) {
+                                return@get call.respond(HttpStatusCode.BadRequest, ApiResponse.error("INVALID_ID", "Invalid epic ID"))
+                            }
                             val callerId = resolveCallerId(call, null)
                             val epic = epicRepository.findById(epicId)
                                 ?: return@get call.respond(HttpStatusCode.NotFound, ApiResponse.error("NOT_FOUND", "Epic not found"))
+                            val isMember = epicRepository.findMember(epicId, callerId) != null
+                            if (!isMember) {
+                                return@get call.respond(HttpStatusCode.Forbidden, ApiResponse.error("FORBIDDEN", "You are not a member of this epic"))
+                            }
                             val dto = buildSyncEpicDto(epic, callerId)
                             call.respond(HttpStatusCode.OK, ApiResponse.success(dto))
                         }
@@ -708,10 +714,17 @@ fun Application.configureSyncRoutes(
                         // EXPENSES
                         route("/{id}/expenses") {
                             get {
-                                val epicId = UUID.fromString(call.parameters["id"] ?: "")
-                                val principal = call.principal<FairSplitPrincipal>()
+                                val idStr = call.parameters["id"] ?: ""
+                                val epicId = try { UUID.fromString(idStr) } catch (_: Exception) {
+                                    return@get call.respond(HttpStatusCode.BadRequest, ApiResponse.error("INVALID_ID", "Invalid epic ID"))
+                                }
+                                val callerId = resolveCallerId(call, null)
                                 val epic = epicRepository.findById(epicId)
                                     ?: return@get call.respond(HttpStatusCode.NotFound, ApiResponse.error("NOT_FOUND", "Epic not found"))
+                                val isMember = epicRepository.findMember(epicId, callerId) != null
+                                if (!isMember) {
+                                    return@get call.respond(HttpStatusCode.Forbidden, ApiResponse.error("FORBIDDEN", "You are not a member of this epic"))
+                                }
                                 val limit = (call.request.queryParameters["limit"]?.toIntOrNull() ?: 100).coerceIn(1, 200)
                                 val offset = (call.request.queryParameters["offset"]?.toLongOrNull() ?: 0L).coerceAtLeast(0L)
                                 val expenses = expenseRepository.findByEpicId(epicId, limit = limit, offset = offset)
